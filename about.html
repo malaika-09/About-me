@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About | Malaika Tauqeer</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="page">
+
+  <!-- About Header -->
+  <div class="pg-head reveal">
+    <span class="pg-tag">// 01</span>
+    <h1 class="pg-title">About <span class="cyan-text">Me</span></h1>
+    <div class="pg-line"></div>
+    <p class="pg-sub">Electrical Engineering Student | Teaching Assistant | Hardware &amp; Software Integration</p>
+  </div>
+
+  <!-- About Cards -->
+  <div class="about-grid">
+    <div class="acard glass reveal">
+      <div class="aicon"><i class="fas fa-user-astronaut"></i></div>
+      <h3>Who I Am</h3>
+      <p>I'm Malaika Tauqeer, a final year BS Electrical Engineering student at UMT Lahore with a <strong>3.91 CGPA</strong>. I thrive at the intersection of hardware and software, building solutions that bridge the physical and digital worlds.</p>
+    </div>
+    <div class="acard glass reveal">
+      <div class="aicon"><i class="fas fa-crosshairs"></i></div>
+      <h3>My Focus</h3>
+      <p>My work revolves around <strong>IoT</strong>, <strong>Embedded Systems</strong>, and <strong>Python</strong>. I love turning complex engineering problems into elegant, practical solutions — from circuit design to intelligent devices.</p>
+    </div>
+    <div class="acard glass reveal">
+      <div class="aicon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <h3>Beyond Engineering</h3>
+      <p>Served as <strong>Teaching Assistant</strong> for 3 semesters and <strong>Peer Tutor</strong> for 2 semesters at UMT. Active <strong>IEEE member</strong> since 2023 and hold <strong>14 professional certifications</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row reveal" style="margin-bottom:3rem;">
+    <div class="stat"><span class="snum" data-t="3">0</span>+<div class="slabel">Years Study</div></div>
+    <div class="sdiv"></div>
+    <div class="stat"><span class="snum" data-t="7">0</span><div class="slabel">Roles & Internships</div></div>
+    <div class="sdiv"></div>
+    <div class="stat"><span class="snum" data-t="14">0</span>+<div class="slabel">Certifications</div></div>
+    <div class="sdiv"></div>
+    <div class="stat"><span class="snum" data-t="391">0</span><div class="slabel">CGPA ×100</div></div>
+  </div>
+
+  <!-- Experience — DYNAMIC from admin panel -->
+  <div class="pg-head reveal" style="margin-top:1rem;">
+    <span class="pg-tag">// 02</span>
+    <h2 class="pg-title">Work <span class="cyan-text">Experience</span></h2>
+    <div class="pg-line"></div>
+  </div>
+  <div class="exp-timeline" id="expContainer"></div>
+
+</div><!-- end page -->
+
+<footer class="footer">
+  <div class="footer-in">
+    <a href="index.html" class="footer-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></a>
+    <p>Designed &amp; Built by <span class="cyan-text">Malaika Tauqeer</span></p>
+    <div class="footer-socs">
+      <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:malaikatauqeer00917@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p class="copy">© 2026 Malaika Tauqeer · Electrical Engineer · UMT Lahore</p>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const data = JSON.parse(localStorage.getItem('mt_experience') || '[]');
+  const container = document.getElementById('expContainer');
+  if (!container) return;
+
+  if (!data.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:3rem;color:var(--muted);">
+        <i class="fas fa-briefcase" style="font-size:3rem;opacity:.2;display:block;margin-bottom:1rem;"></i>
+        <p style="font-family:var(--fm);">No experience entries yet. Add from Admin Panel.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = data.map(e => `
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-card glass">
+        <div class="exp-top">
+          <div class="exp-icon"><i class="${e.icon || 'fas fa-briefcase'}"></i></div>
+          <div class="exp-meta">
+            <h3>${e.title}</h3>
+            <span class="exp-company">${e.company}</span>
+            <span class="exp-date"><i class="fas fa-calendar"></i> ${e.duration}</span>
+          </div>
+          ${e.badgeLabel ? `<span class="exp-badge ${e.badge || ''}">${e.badgeLabel}</span>` : ''}
+        </div>
+        <p>${e.desc}</p>
+        <div class="exp-tags">${(e.tags || []).map(t => `<span>${t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+
+  // Animate new elements
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+    });
+  }, { threshold: 0.1 });
+  container.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+});
+</script>
+</body>
+</html>

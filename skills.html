@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Skills | Malaika Tauqeer</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="page">
+  <div class="pg-head reveal">
+    <span class="pg-tag">// 03</span>
+    <h1 class="pg-title">Technical <span class="cyan-text">Skills</span></h1>
+    <div class="pg-line"></div>
+    <p class="pg-sub">Hardware · Software · AI · Tools</p>
+  </div>
+  <div class="skills-grid" id="skillsGrid"></div>
+  <div class="badges-wrap reveal" id="badgesWrap" style="margin-top:1.5rem;"></div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <a href="index.html" class="footer-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></a>
+    <p>Designed &amp; Built by <span class="cyan-text">Malaika Tauqeer</span></p>
+    <div class="footer-socs">
+      <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:malaikatauqeer00917@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p class="copy">© 2026 Malaika Tauqeer · Electrical Engineer · UMT Lahore</p>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const data = JSON.parse(localStorage.getItem('mt_skills') || '[]');
+  const grid   = document.getElementById('skillsGrid');
+  const badges = document.getElementById('badgesWrap');
+
+  if (!data.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);"><i class="fas fa-code" style="font-size:3rem;opacity:.2;display:block;margin-bottom:1rem;"></i><p style="font-family:var(--fm);">No skills added yet. Add from Admin Panel.</p></div>`;
+    return;
+  }
+
+  const catIcons = {
+    'Embedded Systems':     'fas fa-microchip',
+    'IoT & Connectivity':   'fas fa-wifi',
+    'Programming':          'fab fa-python',
+    'Electrical Engineering':'fas fa-bolt',
+    'EE Tools & Software':  'fas fa-tools',
+    'Dev Tools':            'fas fa-code-branch'
+  };
+
+  // Group by category
+  const cats = {};
+  data.forEach(s => {
+    if (!cats[s.category]) cats[s.category] = [];
+    cats[s.category].push(s);
+  });
+
+  grid.innerHTML = Object.entries(cats).map(([cat, skills]) => `
+    <div class="skill-cat glass reveal">
+      <div class="sc-head">
+        <i class="${catIcons[cat] || 'fas fa-code'}"></i>
+        <h3>${cat}</h3>
+      </div>
+      <div class="sklist">
+        ${skills.map(s => `
+          <div class="ski">
+            <span>${s.name}</span>
+            <div class="sb"><div class="sf" data-w="${s.level}"></div></div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  badges.innerHTML = data.map(s => `<span class="badge">${s.name}</span>`).join('');
+
+  // Skill bar animation
+  const barObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.sf').forEach(b => setTimeout(() => b.style.width = b.dataset.w + '%', 200));
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  // Reveal animation
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); }});
+  }, { threshold: 0.1 });
+
+  grid.querySelectorAll('.skill-cat').forEach(el => { barObs.observe(el); revObs.observe(el); });
+});
+</script>
+</body>
+</html>

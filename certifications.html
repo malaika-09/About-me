@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Certifications | Malaika Tauqeer</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* ---- Cert Gallery ---- */
+    .cert-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.5rem; }
+
+    .cert-full-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:14px; overflow:hidden;
+      transition:all .35s ease; position:relative;
+    }
+    .cert-full-card:hover { border-color:var(--border-h); box-shadow:var(--glow); transform:translateY(-5px); }
+
+    /* Top color bar per category */
+    .cert-full-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background:var(--bar-color, linear-gradient(90deg,var(--cyan),var(--purple)));
+    }
+
+    .cert-img-wrap {
+      position:relative; width:100%; height:180px;
+      background:linear-gradient(135deg,rgba(0,212,255,.05),rgba(123,47,255,.05));
+      overflow:hidden; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .cert-img-wrap img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .cert-img-wrap:hover img { transform:scale(1.05); }
+    .cert-img-placeholder {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:.7rem; width:100%; height:100%;
+    }
+    .cert-img-placeholder i { font-size:3rem; color:rgba(0,212,255,.3); }
+    .cert-img-placeholder span { font-family:var(--fm); font-size:.75rem; color:var(--muted); letter-spacing:1px; }
+    .cert-view-btn {
+      position:absolute; inset:0; background:rgba(0,0,0,.6);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity .3s ease;
+      font-family:var(--fm); font-size:.85rem; color:var(--cyan); gap:.5rem;
+    }
+    .cert-img-wrap:hover .cert-view-btn { opacity:1; }
+
+    .cert-body { padding:1.3rem 1.4rem; }
+    .cert-category-tag {
+      display:inline-block; padding:.2rem .7rem; border-radius:50px;
+      font-family:var(--fm); font-size:.68rem; letter-spacing:.5px;
+      margin-bottom:.7rem;
+    }
+    .cert-body h3 { font-family:var(--fh); font-size:.9rem; letter-spacing:.5px; margin-bottom:.5rem; line-height:1.4; }
+    .cert-body .cert-desc { color:var(--muted); font-size:.85rem; line-height:1.6; margin-bottom:.9rem; }
+    .cert-meta { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; }
+    .cert-org-date { display:flex; flex-direction:column; gap:.15rem; }
+    .cert-org-date .org { font-family:var(--fm); font-size:.78rem; color:var(--cyan); }
+    .cert-org-date .dt  { font-family:var(--fm); font-size:.72rem; color:var(--muted); }
+    .cert-id { font-family:var(--fm); font-size:.68rem; color:var(--muted); }
+
+    /* Lightbox */
+    .lb { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.94); align-items:center; justify-content:center; flex-direction:column; gap:1rem; }
+    .lb.open { display:flex; }
+    .lb img { max-width:92vw; max-height:82vh; border-radius:10px; border:1px solid var(--border); box-shadow:0 0 60px rgba(0,212,255,.1); }
+    .lb-close { position:absolute; top:1.5rem; right:2rem; color:#fff; font-size:1.8rem; cursor:pointer; background:rgba(0,212,255,.15); border:1px solid var(--cyan); width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all .3s; }
+    .lb-close:hover { background:var(--cyan); color:#04080f; }
+    .lb-prev,.lb-next { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,212,255,.12); border:1px solid var(--border); color:var(--text); width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.1rem; transition:all .3s; }
+    .lb-prev { left:1.5rem; }
+    .lb-next { right:1.5rem; }
+    .lb-prev:hover,.lb-next:hover { background:var(--cyan); color:#04080f; border-color:var(--cyan); }
+    .lb-caption { font-family:var(--fm); font-size:.85rem; color:var(--muted); text-align:center; max-width:600px; padding:0 1rem; }
+    .lb-counter { font-family:var(--fm); font-size:.75rem; color:var(--muted); }
+
+    /* Filter tabs */
+    .filter-tabs { display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:2rem; }
+    .ftab {
+      padding:.4rem 1.1rem; border-radius:50px; cursor:pointer;
+      font-family:var(--fm); font-size:.78rem; letter-spacing:.5px;
+      background:rgba(255,255,255,.04); border:1px solid var(--border);
+      color:var(--muted); transition:all .3s;
+    }
+    .ftab:hover,.ftab.active { background:rgba(0,212,255,.12); border-color:var(--cyan); color:var(--cyan); }
+
+    /* Stats banner */
+    .cert-stats { display:flex; gap:2rem; flex-wrap:wrap; align-items:center; margin-bottom:2.5rem; padding:1.2rem 2rem; background:var(--card); border:1px solid var(--border); border-radius:var(--r); }
+    .cs-item { text-align:center; }
+    .cs-num { font-family:var(--fh); font-size:2rem; font-weight:900; color:var(--cyan); display:block; }
+    .cs-label { font-family:var(--fm); font-size:.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<!-- Lightbox -->
+<div class="lb" id="lb">
+  <div class="lb-close" id="lbClose"><i class="fas fa-times"></i></div>
+  <div class="lb-prev" id="lbPrev"><i class="fas fa-chevron-left"></i></div>
+  <img id="lbImg" src="" alt=""/>
+  <div class="lb-next" id="lbNext"><i class="fas fa-chevron-right"></i></div>
+  <p class="lb-caption" id="lbCap"></p>
+  <p class="lb-counter" id="lbCount"></p>
+</div>
+
+<div class="page">
+  <div class="pg-head reveal">
+    <span class="pg-tag">// 05</span>
+    <h1 class="pg-title">My <span class="cyan-text">Certifications</span></h1>
+    <div class="pg-line"></div>
+    <p class="pg-sub">14 verified certificates across AI, ML, Computer Vision, Robotics, Business & Communication</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="cert-stats reveal">
+    <div class="cs-item"><span class="cs-num">14</span><span class="cs-label">Total Certs</span></div>
+    <div style="width:1px;height:40px;background:var(--border);"></div>
+    <div class="cs-item"><span class="cs-num">7</span><span class="cs-label">Platforms</span></div>
+    <div style="width:1px;height:40px;background:var(--border);"></div>
+    <div class="cs-item"><span class="cs-num">2026</span><span class="cs-label">Latest Year</span></div>
+    <div style="width:1px;height:40px;background:var(--border);"></div>
+    <p style="color:var(--muted);font-size:.9rem;flex:1;">"Every certificate is a step forward — a commitment to never stop learning and growing as an engineer."</p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs reveal">
+    <span class="ftab active" data-filter="all">All (14)</span>
+    <span class="ftab" data-filter="ai">AI / Prompting</span>
+    <span class="ftab" data-filter="ml">Machine Learning</span>
+    <span class="ftab" data-filter="cv">Computer Vision</span>
+    <span class="ftab" data-filter="dev">Software Dev</span>
+    <span class="ftab" data-filter="robotics">Robotics</span>
+    <span class="ftab" data-filter="business">Business</span>
+    <span class="ftab" data-filter="other">Other</span>
+  </div>
+
+  <!-- Certificates Grid -->
+  <div class="cert-gallery" id="certGallery">
+
+    <!-- 1. Amazon Virtual Assistant -->
+    <div class="cert-full-card reveal" data-cat="business" style="--bar-color:linear-gradient(90deg,#ff9900,#ffb84d);">
+      <div class="cert-img-wrap" onclick="openLb(0)">
+        <img src="certs/cert_amazon.jpg" alt="Amazon VA Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fab fa-amazon\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(255,153,0,.12);border:1px solid rgba(255,153,0,.3);color:#ff9900;">Business</span>
+        <h3>Amazon Virtual Assistant</h3>
+        <p class="cert-desc">Completed a 2-month intensive course on Amazon Virtual Assistance — mastering product research, listing optimization, keyword research using Helium10, and customer support strategies for Amazon marketplace.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-building" style="margin-right:.3rem;"></i>TNS Trainings & Skills · KIPS CSS|PMS</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>Mar 2024 – May 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. English Immersion SD100 -->
+    <div class="cert-full-card reveal" data-cat="other" style="--bar-color:linear-gradient(90deg,#ffd700,#000);">
+      <div class="cert-img-wrap" onclick="openLb(1)">
+        <img src="certs/cert_english.jpg" alt="English Immersion Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-language\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:#ffd700;">Communication</span>
+        <h3>English Immersion SD-100</h3>
+        <p class="cert-desc">Successfully completed the UMT-accredited English Immersion (SD-100) course — strengthening advanced communication skills, fluency, and professional English proficiency for engineering and academic environments.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-university" style="margin-right:.3rem;"></i>UMT Connected · E-UMT</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>28th June 2025 · ID: F2023019002</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. CSR / Sustainable Development -->
+    <div class="cert-full-card reveal" data-cat="other" style="--bar-color:linear-gradient(90deg,#00c853,#00d4ff);">
+      <div class="cert-img-wrap" onclick="openLb(2)">
+        <img src="certs/cert_csr.jpg" alt="CSR Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-leaf\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.3);color:#00c853;">CSR</span>
+        <h3>Corporate Social Responsibility — SDI</h3>
+        <p class="cert-desc">Completed 80 hours of community work mandatory for degree completion — Summer 2024. Awarded by UMT Sustainable Development Initiative under Program EE. Registration: F2023019002.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-university" style="margin-right:.3rem;"></i>UMT · Sustainable Development Initiative</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>Summer 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SOFTEC'25 LFR -->
+    <div class="cert-full-card reveal" data-cat="robotics" style="--bar-color:linear-gradient(90deg,#7b2fff,#ff4d9e);">
+      <div class="cert-img-wrap" onclick="openLb(3)">
+        <img src="certs/cert_softec.jpg" alt="SOFTEC 25 Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-robot\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.3);color:#a78bfa;">Robotics</span>
+        <h3>SOFTEC'25 — Line Following Robot</h3>
+        <p class="cert-desc">Certificate of Participation for competing in the Line Following Robot competition at SOFTEC'25 (Vision Beyond Limits) — hosted by FAST-NUCES Lahore, powered by Arrivy. Achieved top 10 ranking among all competing teams.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-trophy" style="margin-right:.3rem;color:var(--yellow);"></i>FAST NUCES, Lahore Campus</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>June 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Image Recognition Basics -->
+    <div class="cert-full-card reveal" data-cat="cv ml" style="--bar-color:linear-gradient(90deg,#ff4d9e,#7b2fff);">
+      <div class="cert-img-wrap" onclick="openLb(4)">
+        <img src="certs/cert_imgbasics.jpg" alt="Image Recognition Basics Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-images\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(255,77,158,.1);border:1px solid rgba(255,77,158,.3);color:var(--pink);">Computer Vision</span>
+        <h3>Image Recognition Basics for Beginners</h3>
+        <p class="cert-desc">Gained foundational knowledge of image recognition and computer vision using Python. Demonstrated initiative and commitment to deepening ML skills and advancing career in AI-powered engineering solutions.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>2nd July 2026 · Code: 10422125</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Image Recognition ML -->
+    <div class="cert-full-card reveal" data-cat="cv ml" style="--bar-color:linear-gradient(90deg,#ff4d9e,#7b2fff);">
+      <div class="cert-img-wrap" onclick="openLb(5)">
+        <img src="certs/cert_imgml.jpg" alt="Image Recognition ML Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-eye\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(255,77,158,.1);border:1px solid rgba(255,77,158,.3);color:var(--pink);">ML · CV</span>
+        <h3>Image Recognition using Machine Learning</h3>
+        <p class="cert-desc">Developed a strong foundation in machine learning techniques for image processing. Learned to implement ML models for visual data classification and recognition tasks using Python and industry tools.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>3rd July 2026 · Code: 10423309</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. OpenCV Beginners -->
+    <div class="cert-full-card reveal" data-cat="cv" style="--bar-color:linear-gradient(90deg,#00d4ff,#7b2fff);">
+      <div class="cert-img-wrap" onclick="openLb(6)">
+        <img src="certs/cert_opencv_beg.jpg" alt="OpenCV Beginners Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-camera\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--cyan);">Computer Vision</span>
+        <h3>Introduction to OpenCV for Beginners</h3>
+        <p class="cert-desc">Explored the fundamentals of OpenCV for computer vision and image processing. Built practical knowledge in image manipulation, filtering, edge detection and object detection workflows using Python and OpenCV.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp · Augmented Startups</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>3rd April 2026 · Code: 10049240</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Neural Network -->
+    <div class="cert-full-card reveal" data-cat="ml" style="--bar-color:linear-gradient(90deg,#7b2fff,#00d4ff);">
+      <div class="cert-img-wrap" onclick="openLb(7)">
+        <img src="certs/cert_neural.jpg" alt="Neural Network Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-brain\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.3);color:#a78bfa;">Machine Learning</span>
+        <h3>Introduction to Neural Network</h3>
+        <p class="cert-desc">Gained foundational knowledge of neural networks and their role in machine learning. Understood architectures, activation functions, backpropagation, and applications in real-world AI engineering problems.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>2nd July 2026 · Code: 10422707</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Python OpenCV -->
+    <div class="cert-full-card reveal" data-cat="cv" style="--bar-color:linear-gradient(90deg,#00d4ff,#00ff88);">
+      <div class="cert-img-wrap" onclick="openLb(8)">
+        <img src="certs/cert_pyopencv.jpg" alt="Python OpenCV Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fab fa-python\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--cyan);">Computer Vision</span>
+        <h3>Introduction to Python OpenCV</h3>
+        <p class="cert-desc">Completed Python OpenCV course gaining practical knowledge in computer vision and image processing. Applied skills to real projects including virtual keyboard and image recognition systems built during engineering coursework.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>11th March 2026 · Code: 9948525</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Deep Learning TF PyTorch -->
+    <div class="cert-full-card reveal" data-cat="ml" style="--bar-color:linear-gradient(90deg,#7b2fff,#ff4d9e);">
+      <div class="cert-img-wrap" onclick="openLb(9)">
+        <img src="certs/cert_deeplearning.jpg" alt="Deep Learning Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-network-wired\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(123,47,255,.12);border:1px solid rgba(123,47,255,.3);color:#a78bfa;">Deep Learning</span>
+        <h3>Deep Learning with TensorFlow &amp; PyTorch</h3>
+        <p class="cert-desc">Gained in-depth knowledge of deep learning frameworks and neural network architectures using TensorFlow and PyTorch. Explored CNNs, RNNs, model training, and deployment for real-world AI applications in engineering.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>6th July 2026 · Code: 10433699</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. Software Development -->
+    <div class="cert-full-card reveal" data-cat="dev" style="--bar-color:linear-gradient(90deg,#00ff88,#00d4ff);">
+      <div class="cert-img-wrap" onclick="openLb(10)">
+        <img src="certs/cert_softdev.jpg" alt="Software Development Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-code\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3);color:var(--green);">Software Dev</span>
+        <h3>What is Software Development?</h3>
+        <p class="cert-desc">Explored the fundamentals of building software systems — understanding SDLC, development methodologies, version control, and best practices that complement hardware engineering skills with strong software foundations.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Simplilearn SkillUp</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>3rd July 2026 · Code: 10425974</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Critical Thinking HP LIFE -->
+    <div class="cert-full-card reveal" data-cat="ai" style="--bar-color:linear-gradient(90deg,#0096d6,#00d4ff);">
+      <div class="cert-img-wrap" onclick="openLb(11)">
+        <img src="certs/cert_hplife.jpg" alt="HP LIFE Critical Thinking Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-lightbulb\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,150,214,.1);border:1px solid rgba(0,150,214,.3);color:#4da6ff;">AI · Critical Thinking</span>
+        <h3>Critical Thinking in the AI Era</h3>
+        <p class="cert-desc">Learned how to use critical thinking to make better decisions in the AI era. Developed skills to identify how AI-generated content can distort truth, counteract biases, and practically fact-check information in professional environments.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-building" style="margin-right:.3rem;"></i>HP LIFE · HP Foundation</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>22nd July 2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. Investment Risk Management Coursera -->
+    <div class="cert-full-card reveal" data-cat="business" style="--bar-color:linear-gradient(90deg,#0056d2,#00d4ff);">
+      <div class="cert-img-wrap" onclick="openLb(12)">
+        <img src="certs/cert_coursera.jpg" alt="Coursera Investment Risk Management"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-chart-line\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,86,210,.1);border:1px solid rgba(0,86,210,.3);color:#4da6ff;">Finance · Risk</span>
+        <h3>Investment Risk Management</h3>
+        <p class="cert-desc">Completed an online Coursera project on Investment Risk Management — gaining foundational knowledge of financial risk assessment, portfolio management strategies, and data-driven decision making in finance and investment.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-graduation-cap" style="margin-right:.3rem;"></i>Coursera · Project Certificate</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>22nd July 2026</span>
+          </div>
+          <a href="https://coursera.org/verify/X53ST9MKRLO4" target="_blank" style="font-family:var(--fm);font-size:.72rem;color:var(--cyan);text-decoration:none;"><i class="fas fa-external-link-alt"></i> Verify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. One Million Prompters -->
+    <div class="cert-full-card reveal" data-cat="ai" style="--bar-color:linear-gradient(90deg,#00d4ff,#0056d2);">
+      <div class="cert-img-wrap" onclick="openLb(13)">
+        <img src="certs/cert_prompters.jpg" alt="One Million Prompters Certificate"
+             onerror="this.parentElement.innerHTML='<div class=\'cert-img-placeholder\'><i class=\'fas fa-brain\'></i><span>CLICK TO VIEW</span></div><div class=\'cert-view-btn\'><i class=\'fas fa-expand\'></i> View Certificate</div>'"/>
+        <div class="cert-view-btn"><i class="fas fa-expand"></i> View Certificate</div>
+      </div>
+      <div class="cert-body">
+        <span class="cert-category-tag" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--cyan);">AI · Prompting</span>
+        <h3>One Million Prompters</h3>
+        <p class="cert-desc">Proudly part of the 1 Million Prompters initiative launched by HH Sheikh Hamdan bin Mohammed Al Maktoum, Crown Prince of Dubai. Developed expertise in prompt engineering for AI systems, aligned with the Dubai Universal Blueprint for Artificial Intelligence — contributing to building a future-ready workforce.</p>
+        <div class="cert-meta">
+          <div class="cert-org-date">
+            <span class="org"><i class="fas fa-star" style="margin-right:.3rem;color:var(--yellow);"></i>Dubai Future Foundation · Dubai Centre for AI</span>
+            <span class="dt"><i class="fas fa-calendar" style="margin-right:.3rem;"></i>July 2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end cert-gallery -->
+
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9/details/certifications/" target="_blank" class="btn-out">
+      <i class="fab fa-linkedin-in"></i> View All on LinkedIn
+    </a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <a href="index.html" class="footer-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></a>
+    <p>Designed &amp; Built by <span class="cyan-text">Malaika Tauqeer</span></p>
+    <div class="footer-socs">
+      <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:malaikatauqeer00917@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p class="copy">© 2026 Malaika Tauqeer · Electrical Engineer · UMT Lahore</p>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+// Certificate images for lightbox (in order)
+const certImgs = [
+  { src:'certs/cert_amazon.jpg',      cap:'Amazon Virtual Assistant — TNS Trainings & Skills · KIPS CSS|PMS · 2024' },
+  { src:'certs/cert_english.jpg',     cap:'English Immersion SD-100 — UMT Connected · June 2025' },
+  { src:'certs/cert_csr.jpg',         cap:'Corporate Social Responsibility — UMT Sustainable Development Initiative · 2024' },
+  { src:'certs/cert_softec.jpg',      cap:'SOFTEC\'25 Line Following Robot — FAST NUCES Lahore · June 2025' },
+  { src:'certs/cert_imgbasics.jpg',   cap:'Image Recognition Basics for Beginners — Simplilearn · July 2026 · Code: 10422125' },
+  { src:'certs/cert_imgml.jpg',       cap:'Image Recognition using Machine Learning — Simplilearn · July 2026 · Code: 10423309' },
+  { src:'certs/cert_opencv_beg.jpg',  cap:'Introduction to OpenCV for Beginners — Simplilearn · April 2026 · Code: 10049240' },
+  { src:'certs/cert_neural.jpg',      cap:'Introduction to Neural Network — Simplilearn · July 2026 · Code: 10422707' },
+  { src:'certs/cert_pyopencv.jpg',    cap:'Introduction to Python OpenCV — Simplilearn · March 2026 · Code: 9948525' },
+  { src:'certs/cert_deeplearning.jpg',cap:'Deep Learning with TensorFlow & PyTorch — Simplilearn · July 2026 · Code: 10433699' },
+  { src:'certs/cert_softdev.jpg',     cap:'What is Software Development? — Simplilearn · July 2026 · Code: 10425974' },
+  { src:'certs/cert_hplife.jpg',      cap:'Critical Thinking in the AI Era — HP LIFE · HP Foundation · July 2026' },
+  { src:'certs/cert_coursera.jpg',    cap:'Investment Risk Management — Coursera Project Certificate · July 2026' },
+  { src:'certs/cert_prompters.jpg',   cap:'One Million Prompters — Dubai Future Foundation · July 2026' },
+];
+
+let currentLb = 0;
+
+function openLb(idx) {
+  currentLb = idx;
+  showLb();
+  document.getElementById('lb').classList.add('open');
+}
+
+function showLb() {
+  const c = certImgs[currentLb];
+  document.getElementById('lbImg').src = c.src;
+  document.getElementById('lbCap').textContent = c.cap;
+  document.getElementById('lbCount').textContent = `${currentLb+1} / ${certImgs.length}`;
+}
+
+document.getElementById('lbClose').onclick = () => document.getElementById('lb').classList.remove('open');
+document.getElementById('lbPrev').onclick  = () => { currentLb=(currentLb-1+certImgs.length)%certImgs.length; showLb(); };
+document.getElementById('lbNext').onclick  = () => { currentLb=(currentLb+1)%certImgs.length; showLb(); };
+document.getElementById('lb').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key==='ArrowLeft')  { currentLb=(currentLb-1+certImgs.length)%certImgs.length; showLb(); }
+  if (e.key==='ArrowRight') { currentLb=(currentLb+1)%certImgs.length; showLb(); }
+  if (e.key==='Escape')     document.getElementById('lb').classList.remove('open');
+});
+
+// Filter tabs
+document.querySelectorAll('.ftab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.dataset.filter;
+    document.querySelectorAll('.cert-full-card').forEach(card => {
+      if (filter==='all' || card.dataset.cat.includes(filter)) {
+        card.style.display='';
+      } else {
+        card.style.display='none';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

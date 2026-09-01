@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Space Invaders | Malaika Tauqeer</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="page">
+  <div class="pg-head reveal">
+    <span class="pg-tag">// 🎮</span>
+    <h1 class="pg-title">Space <span class="cyan-text">Invaders</span></h1>
+    <div class="pg-line"></div>
+    <p class="pg-sub">Built by Malaika Tauqeer · Use ← → to move · Space to shoot</p>
+  </div>
+
+  <div class="game-wrap reveal">
+    <div class="game-info-bar">
+      <span>Score: <strong id="scoreVal">0</strong></span>
+      <span>Level: <strong id="levelVal">1</strong></span>
+      <span>Lives: <strong id="livesVal">❤️❤️❤️</strong></span>
+    </div>
+    <canvas id="gameCanvas" width="700" height="450"></canvas>
+    <div class="game-controls-bar">
+      <button class="btn-prim" id="startBtn"><i class="fas fa-play"></i> Start Game</button>
+      <button class="btn-out"  id="pauseBtn" disabled><i class="fas fa-pause"></i> Pause</button>
+      <span class="game-hint">← → Move &nbsp;|&nbsp; Space / ↑ Shoot &nbsp;|&nbsp; P Pause</span>
+    </div>
+    <div class="mobile-controls">
+      <button class="mc-btn" id="mc-left"><i class="fas fa-arrow-left"></i></button>
+      <button class="mc-btn mc-fire" id="mc-fire"><i class="fas fa-circle"></i> FIRE</button>
+      <button class="mc-btn" id="mc-right"><i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <a href="index.html" class="footer-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></a>
+    <p>Designed &amp; Built by <span class="cyan-text">Malaika Tauqeer</span></p>
+    <div class="footer-socs">
+      <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:malaikatauqeer00917@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p class="copy">© 2026 Malaika Tauqeer · Electrical Engineer · UMT Lahore</p>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

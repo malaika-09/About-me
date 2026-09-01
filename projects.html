@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Projects | Malaika Tauqeer</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* ---- Project Media Gallery ---- */
+    .media-gallery { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.8rem; }
+    .media-thumb {
+      width:70px; height:55px; border-radius:6px; overflow:hidden;
+      border:1px solid var(--border); cursor:pointer;
+      background:rgba(0,212,255,.05);
+      display:flex; align-items:center; justify-content:center;
+      transition:all .3s; position:relative;
+    }
+    .media-thumb:hover { border-color:var(--cyan); box-shadow:var(--glow); transform:scale(1.08); }
+    .media-thumb img { width:100%; height:100%; object-fit:cover; }
+    .media-thumb .thumb-icon { color:var(--cyan); font-size:1.3rem; }
+    .media-thumb .vid-badge {
+      position:absolute; top:2px; right:3px;
+      background:var(--pink); color:#fff;
+      font-size:.5rem; padding:1px 4px; border-radius:3px;
+      font-family:var(--fm); letter-spacing:.5px;
+    }
+    .media-thumb .doc-badge {
+      position:absolute; top:2px; right:3px;
+      background:var(--yellow); color:#04080f;
+      font-size:.5rem; padding:1px 4px; border-radius:3px;
+      font-family:var(--fm);
+    }
+    /* Lightbox */
+    .lightbox {
+      display:none; position:fixed; top:0;left:0;right:0;bottom:0;
+      background:rgba(0,0,0,.92); z-index:9999;
+      align-items:center; justify-content:center; flex-direction:column;
+      gap:1rem;
+    }
+    .lightbox.open { display:flex; }
+    .lightbox img, .lightbox video {
+      max-width:90vw; max-height:80vh;
+      border-radius:10px; border:1px solid var(--border);
+    }
+    .lb-close {
+      position:absolute; top:1.5rem; right:2rem;
+      color:#fff; font-size:2rem; cursor:pointer;
+      background:rgba(0,212,255,.15); border:1px solid var(--cyan);
+      width:42px; height:42px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .3s;
+    }
+    .lb-close:hover { background:var(--cyan); color:#04080f; }
+    .lb-caption { color:var(--muted); font-family:var(--fm); font-size:.82rem; }
+    /* Doc links row */
+    .doc-links { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; }
+    .doc-link {
+      display:inline-flex; align-items:center; gap:.35rem;
+      padding:.3rem .8rem; border-radius:4px;
+      font-family:var(--fm); font-size:.72rem;
+      text-decoration:none; transition:all .3s;
+    }
+    .doc-pdf  { background:rgba(255,77,77,.1); border:1px solid rgba(255,77,77,.3); color:#ff6b6b; }
+    .doc-word { background:rgba(0,100,210,.1); border:1px solid rgba(0,100,210,.3); color:#4da6ff; }
+    .doc-vid  { background:rgba(255,77,158,.1); border:1px solid rgba(255,77,158,.3); color:var(--pink); }
+    .doc-pdf:hover,.doc-word:hover,.doc-vid:hover { transform:translateY(-2px); filter:brightness(1.2); }
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-close" id="lbClose"><i class="fas fa-times"></i></div>
+  <img id="lbImg" src="" alt="" style="display:none"/>
+  <video id="lbVid" controls style="display:none"></video>
+  <p class="lb-caption" id="lbCaption"></p>
+</div>
+
+<div class="page">
+  <div class="pg-head reveal">
+    <span class="pg-tag">// 04</span>
+    <h1 class="pg-title">My <span class="cyan-text">Projects</span></h1>
+    <div class="pg-line"></div>
+    <p class="pg-sub">Hardware · IoT · Python · Game Dev · Web · Click thumbnails to view media</p>
+  </div>
+
+  <div class="proj-grid">
+
+    <!-- ===== Project 1 — Heartbeat & SpO2 ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img">
+        <!-- Main image: <img src="images/heartbeat.jpg" alt="Heartbeat Monitor"> -->
+        <span class="proj-img-icon"><i class="fas fa-heartbeat"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Heartbeat &amp; SpO2 Monitor</h3>
+        <p>Real-time health monitoring using MAX30102 sensor. Measures heart rate and blood oxygen (SpO2) with OLED display and alert system on Arduino/ESP32.</p>
+        <div class="ptags"><span>Arduino</span><span>MAX30102</span><span>SpO2</span><span>OLED</span><span>Healthcare</span></div>
+        <!-- Media thumbnails — replace src with real files -->
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/hb1.jpg','Heartbeat Monitor Setup')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openLightbox('images/hb2.jpg','SpO2 Reading Display')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/hb_demo.mp4','Demo Video')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/heartbeat_report.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Report PDF</a>
+          <a href="docs/heartbeat_doc.docx" download class="doc-link doc-word"><i class="fas fa-file-word"></i> Documentation</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 2 — LFR ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img">
+        <!-- <img src="images/lfr.jpg" alt="LFR"> -->
+        <span class="proj-img-icon"><i class="fas fa-robot"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Line Following Robot — SoftTech'25</h3>
+        <p>Autonomous LFR using IR sensors and PID control. Competed at FAST-NUCES SoftTech'25 — achieved <strong>Top 10 ranking</strong>.</p>
+        <div class="ptags"><span>Arduino</span><span>IR Sensors</span><span>PID</span><span>Robotics</span><span>SoftTech'25</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/lfr1.jpg','Line Following Robot')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openLightbox('images/lfr2.jpg','LFR at SoftTech 25')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/lfr_run.mp4','LFR Running Demo')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+          <div class="media-thumb" onclick="openLightbox('images/softtech_cert.jpg','SoftTech Certificate')">
+            <i class="fas fa-certificate thumb-icon"></i>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/lfr_report.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Report</a>
+          <a href="docs/lfr_doc.docx" download class="doc-link doc-word"><i class="fas fa-file-word"></i> Docs</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 3 — Space Invader ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img" style="background:linear-gradient(135deg,rgba(123,47,255,.15),rgba(255,77,158,.1));">
+        <!-- <img src="images/spaceinvader.png" alt="Space Invader"> -->
+        <span class="proj-img-icon"><i class="fas fa-gamepad"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="game.html"><i class="fas fa-play"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Space Invader Game</h3>
+        <p>Classic Space Invader built with Python (Pygame). Multiple enemy types, shields, explosions, levels. Playable in this portfolio!</p>
+        <div class="ptags"><span>Python</span><span>Pygame</span><span>Game Dev</span><span>OOP</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/game1.png','Space Invader Screenshot')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/game_demo.mp4','Gameplay Demo')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/game_doc.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Documentation</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+          <a href="game.html" class="btn-game" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fas fa-gamepad"></i> Play</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 4 — Birthday Wish ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img" style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,77,158,.08));">
+        <span class="proj-img-icon"><i class="fas fa-birthday-cake"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://malaika-09.github.io" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Birthday Wish — Hardware &amp; Website</h3>
+        <p>Dual-mode birthday wish: hardware LED matrix on Arduino + web version on GitHub Pages with animations and music.</p>
+        <div class="ptags"><span>Arduino</span><span>LED Matrix</span><span>HTML/CSS/JS</span><span>GitHub Pages</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/bday1.jpg','Birthday Hardware')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/bday_demo.mp4','Birthday Demo Video')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://malaika-09.github.io" target="_blank" class="btn-prim" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fas fa-globe"></i> Live</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 5 — Virtual Keyboard ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img" style="background:linear-gradient(135deg,rgba(0,255,136,.08),rgba(0,212,255,.08));">
+        <!-- <img src="images/vkeyboard.jpg" alt="Virtual Keyboard"> -->
+        <span class="proj-img-icon"><i class="fas fa-keyboard"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Virtual Keyboard</h3>
+        <p>Computer vision based virtual keyboard using Python and OpenCV. Detects hand gestures via webcam to simulate keyboard typing — no physical keyboard needed. Built using finger tracking and gesture recognition.</p>
+        <div class="ptags"><span>Python</span><span>OpenCV</span><span>Computer Vision</span><span>Hand Tracking</span><span>Gesture Recognition</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/vkb1.jpg','Virtual Keyboard Demo')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/vkb_demo.mp4','Virtual Keyboard Video')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+          <div class="media-thumb" onclick="openLightbox('images/vkb2.jpg','Hand Tracking')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/vkeyboard_report.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Report</a>
+          <a href="docs/vkeyboard_doc.docx" download class="doc-link doc-word"><i class="fas fa-file-word"></i> Docs</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 6 — Smart Home ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img">
+        <span class="proj-img-icon"><i class="fas fa-home"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Smart Home Automation</h3>
+        <p>IoT-based home automation using ESP32 and MQTT. Control lights, fans, appliances remotely via mobile dashboard with real-time monitoring.</p>
+        <div class="ptags"><span>ESP32</span><span>MQTT</span><span>IoT</span><span>Python</span><span>Dashboard</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/sh1.jpg','Smart Home Circuit')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openLightbox('images/sh2.jpg','Dashboard Screenshot')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/smarthome_report.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Report</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Project 7 — Image Recognition ===== -->
+    <div class="proj-card glass reveal">
+      <div class="proj-img" style="background:linear-gradient(135deg,rgba(123,47,255,.12),rgba(0,212,255,.08));">
+        <span class="proj-img-icon"><i class="fas fa-eye"></i></span>
+        <div class="proj-img-overlay">
+          <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      <div class="proj-body">
+        <h3>Image Recognition with ML</h3>
+        <p>ML-based image recognition using TensorFlow and OpenCV. CNN architecture for real-time object detection via camera feed.</p>
+        <div class="ptags"><span>Python</span><span>OpenCV</span><span>TensorFlow</span><span>CNN</span><span>ML</span></div>
+        <div class="media-gallery">
+          <div class="media-thumb" onclick="openLightbox('images/ml1.jpg','Image Recognition Output')">
+            <i class="fas fa-image thumb-icon"></i>
+          </div>
+          <div class="media-thumb" onclick="openVideo('images/ml_demo.mp4','ML Demo')">
+            <i class="fas fa-play thumb-icon"></i>
+            <span class="vid-badge">VID</span>
+          </div>
+        </div>
+        <div class="doc-links">
+          <a href="docs/imagerecog_report.pdf" download class="doc-link doc-pdf"><i class="fas fa-file-pdf"></i> Report</a>
+        </div>
+        <div class="proj-doc-btn" style="margin-top:.6rem;">
+          <a href="https://github.com/malaika-09" target="_blank" class="btn-out" style="font-size:.75rem;padding:.5rem 1rem;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- How to add media note -->
+  <div class="glass reveal" style="margin-top:2.5rem;padding:1.5rem 2rem;border-style:dashed;">
+    <h4 style="font-family:var(--fh);font-size:.9rem;color:var(--cyan);margin-bottom:1rem;letter-spacing:1px;"><i class="fas fa-info-circle"></i> Apni Files Kaise Add Karein</h4>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+      <div style="color:var(--muted);font-size:.85rem;">
+        <strong style="color:var(--green);">📸 Images:</strong><br/>
+        <code style="color:var(--cyan);">images/</code> folder banao → photos dalo → src update karo
+      </div>
+      <div style="color:var(--muted);font-size:.85rem;">
+        <strong style="color:var(--pink);">🎥 Videos:</strong><br/>
+        <code style="color:var(--cyan);">images/</code> mein .mp4 dalo → onclick mein path update karo
+      </div>
+      <div style="color:var(--muted);font-size:.85rem;">
+        <strong style="color:var(--yellow);">📄 Docs:</strong><br/>
+        <code style="color:var(--cyan);">docs/</code> folder banao → PDF/Word dalo → href update karo
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;">
+    <a href="https://github.com/malaika-09" target="_blank" class="btn-out"><i class="fab fa-github"></i> View All on GitHub</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-in">
+    <a href="index.html" class="footer-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></a>
+    <p>Designed &amp; Built by <span class="cyan-text">Malaika Tauqeer</span></p>
+    <div class="footer-socs">
+      <a href="https://www.linkedin.com/in/malaika-tauqeer-a364b62b9" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/malaika-09" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:malaikatauqeer00917@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+    <p class="copy">© 2026 Malaika Tauqeer · Electrical Engineer · UMT Lahore</p>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+// Lightbox
+function openLightbox(src, caption) {
+  const lb  = document.getElementById('lightbox');
+  const img = document.getElementById('lbImg');
+  const vid = document.getElementById('lbVid');
+  const cap = document.getElementById('lbCaption');
+  vid.style.display = 'none'; vid.pause && vid.pause();
+  img.src = src; img.style.display = 'block';
+  cap.textContent = caption;
+  lb.classList.add('open');
+}
+function openVideo(src, caption) {
+  const lb  = document.getElementById('lightbox');
+  const img = document.getElementById('lbImg');
+  const vid = document.getElementById('lbVid');
+  const cap = document.getElementById('lbCaption');
+  img.style.display = 'none';
+  vid.src = src; vid.style.display = 'block';
+  cap.textContent = caption;
+  lb.classList.add('open');
+}
+document.getElementById('lbClose').addEventListener('click', () => {
+  const lb  = document.getElementById('lightbox');
+  const vid = document.getElementById('lbVid');
+  lb.classList.remove('open');
+  vid.pause && vid.pause(); vid.src = '';
+});
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('open');
+    const vid = document.getElementById('lbVid');
+    vid.pause && vid.pause(); vid.src = '';
+  }
+});
+</script>
+</body>
+</html>
