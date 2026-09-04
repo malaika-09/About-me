@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Admin Test</title>
+  <style>
+    body { 
+      margin: 0; 
+      background: #0a0e27; 
+      color: #fff; 
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .test-box {
+      background: #1a1f3a;
+      border: 2px solid #00d4ff;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 400px;
+    }
+    h1 { color: #00d4ff; margin-bottom: 1rem; }
+    input { 
+      width: 100%; 
+      padding: 0.8rem; 
+      margin: 1rem 0;
+      background: #0a0e27;
+      border: 1px solid #00d4ff;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background: linear-gradient(135deg, #00d4ff, #7b2fff);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    button:hover { opacity: 0.9; }
+    #message { margin-top: 1rem; color: #00d4ff; }
+  </style>
+</head>
+<body>
+  <div class="test-box">
+    <h1>&lt;MT/&gt; Admin Panel</h1>
+    <p>Simple Test Version</p>
+    <input type="password" id="pw" placeholder="Password: malaika2026" />
+    <button onclick="checkPw()">Login</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    function checkPw() {
+      const pw = document.getElementById('pw').value;
+      const msg = document.getElementById('message');
+      if (pw === 'malaika2026') {
+        msg.innerHTML = '✅ Login successful! Redirecting...';
+        msg.style.color = '#00ff88';
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      } else {
+        msg.innerHTML = '❌ Wrong password!';
+        msg.style.color = '#ff6b6b';
+      }
+    }
+    // Enter key support
+    document.getElementById('pw').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkPw();
+    });
+  </script>
+</body>
+</html>

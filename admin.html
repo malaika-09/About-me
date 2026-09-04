@@ -1,363 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Admin Panel | Malaika Tauqeer</title>
-  <link rel="stylesheet" href="styles.css"/>
-  <link rel="stylesheet" href="admin.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { 
+      margin: 0; 
+      background: #0a0e27; 
+      color: #fff; 
+      font-family: 'Rajdhani', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(15,20,40,0.95));
+      border: 2px solid #00d4ff;
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 0 60px rgba(0,212,255,0.15);
+    }
+    .logo { 
+      font-family: 'Orbitron', monospace; 
+      font-size: 2.5rem; 
+      font-weight: 900;
+      color: #00d4ff; 
+      letter-spacing: 3px; 
+      margin-bottom: 1rem; 
+    }
+    .bracket { color: #7b2fff; }
+    h2 { 
+      font-family: 'Orbitron', sans-serif; 
+      font-size: 1.4rem; 
+      letter-spacing: 2px; 
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    .subtitle { 
+      color: #8b95b5; 
+      font-size: 0.9rem; 
+      margin-bottom: 2rem; 
+    }
+    .input-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .input-wrap i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00d4ff;
+    }
+    input { 
+      width: 100%; 
+      padding: 0.9rem 1rem 0.9rem 2.8rem;
+      background: rgba(10,14,39,0.6);
+      border: 1px solid rgba(0,212,255,0.3);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Rajdhani', sans-serif;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+    input:focus { 
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+    }
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #00d4ff, #7b2fff);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+      transition: all 0.3s;
+    }
+    button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,212,255,0.4);
+    }
+    .message { 
+      margin-top: 1rem; 
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+    }
+    .success { color: #00ff88; }
+    .error { color: #ff6b6b; }
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #8b95b5;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: #00d4ff; }
+  </style>
 </head>
-<body class="admin-body">
-
-<!-- ====== LOGIN SCREEN ====== -->
-<div class="login-wrap" id="loginWrap">
+<body>
   <div class="login-box">
-    <div class="login-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></div>
+    <div class="logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></div>
     <h2>Admin Panel</h2>
-    <p class="login-sub">Enter password to continue</p>
-    <div class="login-form">
-      <div class="input-wrap">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="pwInput" placeholder="Password" autocomplete="off"/>
-        <i class="fas fa-eye toggle-pw" id="togglePw"></i>
-      </div>
-      <div class="login-error" id="loginError"></div>
-      <button class="btn-prim btn-full" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+    <p class="subtitle">Enter password to continue</p>
+    
+    <div class="input-wrap">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="pw" placeholder="Password" />
     </div>
+    
+    <button onclick="checkPassword()"><i class="fas fa-sign-in-alt"></i> Login</button>
+    <div id="message" class="message"></div>
+    
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
   </div>
-</div>
 
-<!-- ====== ADMIN DASHBOARD ====== -->
-<div class="admin-wrap" id="adminWrap" style="display:none;">
-
-  <!-- Sidebar -->
-  <aside class="admin-sidebar" id="adminSidebar">
-    <div class="sidebar-logo"><span class="bracket">&lt;</span>MT<span class="bracket">/&gt;</span></div>
-    <p class="sidebar-sub">Admin Panel</p>
-    <nav class="sidebar-nav">
-      <a href="#" class="sn active" data-tab="dashboard"><i class="fas fa-gauge"></i> Dashboard</a>
-      <a href="#" class="sn" data-tab="projects"><i class="fas fa-diagram-project"></i> Projects</a>
-      <a href="#" class="sn" data-tab="skills"><i class="fas fa-code"></i> Skills</a>
-      <a href="#" class="sn" data-tab="experience"><i class="fas fa-briefcase"></i> Experience</a>
-      <a href="#" class="sn" data-tab="certifications"><i class="fas fa-certificate"></i> Certifications</a>
-      <a href="#" class="sn" data-tab="education"><i class="fas fa-graduation-cap"></i> Education</a>
-      <a href="#" class="sn" data-tab="settings"><i class="fas fa-gear"></i> Settings</a>
-    </nav>
-    <div class="sidebar-bottom">
-      <a href="index.html" class="sn"><i class="fas fa-eye"></i> View Portfolio</a>
-      <a href="#" class="sn logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="admin-main">
-
-    <!-- Top bar -->
-    <div class="admin-topbar">
-      <button class="hamburger-admin" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-      <h1 class="admin-page-title" id="adminPageTitle">Dashboard</h1>
-    <div class="topbar-right">
-        <span class="admin-badge"><i class="fas fa-circle" style="color:var(--green);font-size:.6rem;"></i> Logged In</span>
-      </div>
-    </div>
-
-    <!-- ===== DASHBOARD TAB ===== -->
-    <div class="tab-content active" id="tab-dashboard">
-      <div class="dash-stats">
-        <div class="dash-stat glass">
-          <i class="fas fa-diagram-project"></i>
-          <div><span class="ds-num" id="ds-projects">0</span><span class="ds-label">Projects</span></div>
-        </div>
-        <div class="dash-stat glass">
-          <i class="fas fa-code"></i>
-          <div><span class="ds-num" id="ds-skills">0</span><span class="ds-label">Skills</span></div>
-        </div>
-        <div class="dash-stat glass">
-          <i class="fas fa-briefcase"></i>
-          <div><span class="ds-num" id="ds-exp">0</span><span class="ds-label">Experience</span></div>
-        </div>
-        <div class="dash-stat glass">
-          <i class="fas fa-certificate"></i>
-          <div><span class="ds-num" id="ds-certs">0</span><span class="ds-label">Certifications</span></div>
-        </div>
-      </div>
-      <div class="dash-info glass">
-        <h3><i class="fas fa-info-circle"></i> How to Use Admin Panel</h3>
-        <ul>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Double click <strong>&lt;MT/&gt;</strong> logo on any page to open admin</li>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Add, edit, delete projects, skills, experience & certifications</li>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Data saves automatically in browser (localStorage)</li>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Use <strong>Export</strong> to save backup JSON file</li>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Use <strong>Import</strong> to restore from backup</li>
-          <li><i class="fas fa-check" style="color:var(--green)"></i> Change password in Settings</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ===== PROJECTS TAB ===== -->
-    <div class="tab-content" id="tab-projects">
-      <div class="tab-toolbar">
-        <button class="btn-prim" id="addProjectBtn"><i class="fas fa-plus"></i> Add Project</button>
-        <input type="text" class="search-input" id="searchProjects" placeholder="Search projects..."/>
-      </div>
-      <div class="items-grid" id="projectsList"></div>
-    </div>
-
-    <!-- ===== SKILLS TAB ===== -->
-    <div class="tab-content" id="tab-skills">
-      <div class="tab-toolbar">
-        <button class="btn-prim" id="addSkillBtn"><i class="fas fa-plus"></i> Add Skill</button>
-        <input type="text" class="search-input" id="searchSkills" placeholder="Search skills..."/>
-      </div>
-      <div class="items-grid" id="skillsList"></div>
-    </div>
-
-    <!-- ===== EXPERIENCE TAB ===== -->
-    <div class="tab-content" id="tab-experience">
-      <div class="tab-toolbar">
-        <button class="btn-prim" id="addExpBtn"><i class="fas fa-plus"></i> Add Experience</button>
-      </div>
-      <div class="items-grid" id="expList"></div>
-    </div>
-
-    <!-- ===== CERTIFICATIONS TAB ===== -->
-    <div class="tab-content" id="tab-certifications">
-      <div class="tab-toolbar">
-        <button class="btn-prim" id="addCertBtn"><i class="fas fa-plus"></i> Add Certification</button>
-        <input type="text" class="search-input" id="searchCerts" placeholder="Search certifications..."/>
-      </div>
-      <div class="items-grid" id="certsList"></div>
-    </div>
-
-    <!-- ===== EDUCATION TAB ===== -->
-    <div class="tab-content" id="tab-education">
-      <div class="tab-toolbar">
-        <button class="btn-prim" id="addEduBtn"><i class="fas fa-plus"></i> Add Education</button>
-      </div>
-      <div class="items-grid" id="eduList"></div>
-    </div>
-
-    <!-- ===== SETTINGS TAB ===== -->
-    <div class="tab-content" id="tab-settings">
-      <div class="settings-grid">
-        <div class="glass settings-card">
-          <h3><i class="fas fa-lock"></i> Change Password</h3>
-          <div class="input-wrap"><i class="fas fa-key"></i><input type="password" id="newPw1" placeholder="New Password"/></div>
-          <div class="input-wrap"><i class="fas fa-key"></i><input type="password" id="newPw2" placeholder="Confirm Password"/></div>
-          <button class="btn-prim" id="changePwBtn" style="margin-top:.8rem;"><i class="fas fa-save"></i> Save Password</button>
-          <p class="settings-msg" id="pwMsg"></p>
-        </div>
-        <div class="glass settings-card">
-          <h3><i class="fas fa-database"></i> Data Management</h3>
-          <p style="color:var(--muted);font-size:.9rem;margin-bottom:1rem;">Export all data as JSON backup or reset everything.</p>
-          <button class="btn-dl" id="exportBtn2" style="margin-bottom:.7rem;width:100%;justify-content:center;"><i class="fas fa-download"></i> Export All Data</button>
-          <button class="btn-out" id="resetBtn" style="width:100%;justify-content:center;border-color:#ff6b6b;color:#ff6b6b;"><i class="fas fa-trash"></i> Reset All Data</button>
-        </div>
-        <div class="glass settings-card">
-          <h3><i class="fas fa-info-circle"></i> Portfolio Info</h3>
-          <div class="info-row"><span>Owner</span><strong>Malaika Tauqeer</strong></div>
-          <div class="info-row"><span>Email</span><strong>malaikatauqeer00917@gmail.com</strong></div>
-          <div class="info-row"><span>GitHub</span><strong>malaika-09</strong></div>
-          <div class="info-row"><span>Version</span><strong>2.0</strong></div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- ====== MODALS ====== -->
-<!-- Project Modal -->
-<div class="modal-overlay" id="projectModal">
-  <div class="modal glass">
-    <div class="modal-head">
-      <h3 id="projectModalTitle">Add Project</h3>
-      <button class="modal-close" data-modal="projectModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label>Project Name *</label><input type="text" id="pName" placeholder="e.g. Smart Home Automation"/></div>
-        <div class="form-group"><label>Icon (FontAwesome class)</label><input type="text" id="pIcon" placeholder="e.g. fas fa-home"/></div>
-      </div>
-      <div class="form-group"><label>Description *</label><textarea id="pDesc" rows="3" placeholder="Project description..."></textarea></div>
-      <div class="form-row">
-        <div class="form-group"><label>GitHub Link</label><input type="text" id="pGithub" placeholder="https://github.com/..."/></div>
-        <div class="form-group"><label>Live Demo Link</label><input type="text" id="pLive" placeholder="https://..."/></div>
-      </div>
-      <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="pTags" placeholder="Arduino, IoT, Python"/></div>
-      <div class="form-group"><label>Image Path</label><input type="text" id="pImg" placeholder="images/project.jpg"/></div>
-      <div class="form-group"><label>Status</label>
-        <select id="pStatus">
-          <option value="completed">Completed</option>
-          <option value="ongoing">Ongoing</option>
-          <option value="in-progress">In Progress</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="projectModal">Cancel</button>
-      <button class="btn-prim" id="saveProjectBtn"><i class="fas fa-save"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Skill Modal -->
-<div class="modal-overlay" id="skillModal">
-  <div class="modal glass">
-    <div class="modal-head">
-      <h3 id="skillModalTitle">Add Skill</h3>
-      <button class="modal-close" data-modal="skillModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label>Skill Name *</label><input type="text" id="sName" placeholder="e.g. Arduino"/></div>
-        <div class="form-group"><label>Category *</label>
-          <select id="sCat">
-            <option>Embedded Systems</option>
-            <option>IoT & Connectivity</option>
-            <option>Programming</option>
-            <option>Electrical Engineering</option>
-            <option>EE Tools & Software</option>
-            <option>Dev Tools</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group"><label>Proficiency % (0-100)</label>
-        <input type="range" id="sLevel" min="0" max="100" value="75" oninput="document.getElementById('sLevelVal').textContent=this.value+'%'"/>
-        <span id="sLevelVal" style="color:var(--cyan);font-family:var(--fm);">75%</span>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="skillModal">Cancel</button>
-      <button class="btn-prim" id="saveSkillBtn"><i class="fas fa-save"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Experience Modal -->
-<div class="modal-overlay" id="expModal">
-  <div class="modal glass">
-    <div class="modal-head">
-      <h3 id="expModalTitle">Add Experience</h3>
-      <button class="modal-close" data-modal="expModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label>Role/Title *</label><input type="text" id="eTitle" placeholder="e.g. Teaching Assistant"/></div>
-        <div class="form-group"><label>Company *</label><input type="text" id="eCompany" placeholder="e.g. UMT"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Duration *</label><input type="text" id="eDuration" placeholder="e.g. Mar 2025 – Jul 2025"/></div>
-        <div class="form-group"><label>Badge Type</label>
-          <select id="eBadge">
-            <option value="">Default</option>
-            <option value="ta-badge">Teaching Assistant</option>
-            <option value="present-badge">Present/Ongoing</option>
-            <option value="amz-badge">Amazon/Business</option>
-            <option value="ieee-badge">IEEE/Tech</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group"><label>Badge Label</label><input type="text" id="eBadgeLabel" placeholder="e.g. TA · Sem 6"/></div>
-      <div class="form-group"><label>Description *</label><textarea id="eDesc" rows="3" placeholder="What did you do?"></textarea></div>
-      <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="eTags" placeholder="Python, OOP, Mentoring"/></div>
-      <div class="form-group"><label>Icon (FontAwesome class)</label><input type="text" id="eIcon" placeholder="fas fa-chalkboard-teacher"/></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="expModal">Cancel</button>
-      <button class="btn-prim" id="saveExpBtn"><i class="fas fa-save"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Certification Modal -->
-<div class="modal-overlay" id="certModal">
-  <div class="modal glass">
-    <div class="modal-head">
-      <h3 id="certModalTitle">Add Certification</h3>
-      <button class="modal-close" data-modal="certModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group"><label>Certification Name *</label><input type="text" id="cName" placeholder="e.g. Deep Learning with TensorFlow"/></div>
-        <div class="form-group"><label>Organization *</label><input type="text" id="cOrg" placeholder="e.g. Simplilearn"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Date *</label><input type="text" id="cDate" placeholder="e.g. Jul 2026"/></div>
-        <div class="form-group"><label>Tag/Category</label><input type="text" id="cTag" placeholder="e.g. ML"/></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Credential ID</label><input type="text" id="cCredId" placeholder="e.g. 10422707"/></div>
-        <div class="form-group"><label>Icon Style</label>
-          <select id="cIconStyle">
-            <option value="ai-icon">AI (Cyan)</option>
-            <option value="ml-icon">ML (Purple)</option>
-            <option value="cv-icon">CV (Pink)</option>
-            <option value="dev-icon">Dev (Green)</option>
-            <option value="fin-icon">Finance (Gold)</option>
-            <option value="rob-icon">Robotics (Cyan)</option>
-            <option value="lang-icon">Language (Orange)</option>
-            <option value="csr-icon">CSR (Green)</option>
-            <option value="amz-c-icon">Amazon (Orange)</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="certModal">Cancel</button>
-      <button class="btn-prim" id="saveCertBtn"><i class="fas fa-save"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Education Modal -->
-<div class="modal-overlay" id="eduModal">
-  <div class="modal glass">
-    <div class="modal-head">
-      <h3 id="eduModalTitle">Add Education</h3>
-      <button class="modal-close" data-modal="eduModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label>Degree/Title *</label><input type="text" id="edTitle" placeholder="e.g. BS Electrical Engineering"/></div>
-      <div class="form-group"><label>Institution *</label><input type="text" id="edInst" placeholder="e.g. UMT Lahore"/></div>
-      <div class="form-row">
-        <div class="form-group"><label>Duration *</label><input type="text" id="edDuration" placeholder="e.g. Oct 2023 – Jul 2027"/></div>
-        <div class="form-group"><label>CGPA/Grade</label><input type="text" id="edGrade" placeholder="e.g. 3.91"/></div>
-      </div>
-      <div class="form-group"><label>Description</label><textarea id="edDesc" rows="2" placeholder="Brief description..."></textarea></div>
-      <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="edTags" placeholder="Circuit Analysis, Embedded Systems"/></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="eduModal">Cancel</button>
-      <button class="btn-prim" id="saveEduBtn"><i class="fas fa-save"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<!-- Confirm Delete Modal -->
-<div class="modal-overlay" id="deleteModal">
-  <div class="modal glass" style="max-width:400px;">
-    <div class="modal-head">
-      <h3>Confirm Delete</h3>
-      <button class="modal-close" data-modal="deleteModal"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--muted);text-align:center;font-size:1rem;">Are you sure you want to delete <strong id="deleteItemName" style="color:#ff6b6b;"></strong>?</p>
-      <p style="color:var(--muted);text-align:center;font-size:.85rem;margin-top:.5rem;">This cannot be undone.</p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-out" data-modal="deleteModal">Cancel</button>
-      <button class="btn-prim" id="confirmDeleteBtn" style="background:linear-gradient(135deg,#ff6b6b,#ff4d9e);"><i class="fas fa-trash"></i> Delete</button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast notification -->
-<div class="toast" id="toast"></div>
-
-<script src="nav.js"></script>
-<script src="admin.js"></script>
+  <script>
+    const DEFAULT_PASSWORD = 'malaika2026';
+    
+    function checkPassword() {
+      const pw = document.getElementById('pw').value;
+      const msg = document.getElementById('message');
+      
+      if (pw === DEFAULT_PASSWORD) {
+        msg.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Access granted.';
+        msg.className = 'message success';
+        setTimeout(() => {
+          alert('Admin panel features will be added soon. Redirecting to portfolio...');
+          window.location.href = 'index.html';
+        }, 1000);
+      } else {
+        msg.innerHTML = '<i class="fas fa-times-circle"></i> Incorrect password. Try again.';
+        msg.className = 'message error';
+      }
+    }
+    
+    // Enter key support
+    document.getElementById('pw').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkPassword();
+    });
+  </script>
 </body>
 </html>
